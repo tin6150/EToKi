@@ -301,7 +301,8 @@ def install_externals() :
             #  Use precompiled which works with a locally compileed htslib
             os.makedirs('HAPO-G-{0}/build'.format(hapog_ver), exist_ok=True)
             #XX shutil.copy('../bin/hapog','HAPO-G-1.2/build')
-            shutil.copy('../bin/hapog','HAPO-G-{0}/build').format(hapog_ver)
+            shutil.copy('../bin/hapog','HAPO-G-1.3.6/build').format(hapog_ver)
+            #xxshutil.copy('../bin/hapog','HAPO-G-{0}/build').format(hapog_ver)  # {0} didn't work here
             os.makedirs('HAPO-G-{0}/bin'.format(hapog_ver), exist_ok=True)
             subprocess.Popen('ln -fs ../build/hapog HAPO-G-{0}/bin/hapog'.format(hapog_ver).
                              split(), stderr=subprocess.PIPE).communicate()
