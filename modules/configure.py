@@ -279,11 +279,18 @@ def install_externals() :
 
         hapog_ver = '1.3.6'
         hapog_name = 'HAPO-G-'+hapog_ver
+	# Downloading Hapo-G package from https://github.com/institut-de-genomique/HAPO-G/archive/refs/tags/1.3.6.tar.gz
+        ##url = 'https://github.com/institut-de-genomique/HAPO-G/archive/refs/tags/{0}.tar.gz'.format(hapog_ver)
+               # https://github.com/institut-de-genomique/HAPO-G/archive/refs/tags/1.3.6.tar.gz
         url = 'https://github.com/institut-de-genomique/HAPO-G/archive/refs/tags/{0}.tar.gz'.format(hapog_ver)
         logger('Downloading Hapo-G package from {0}'.format(url))
         subprocess.Popen('curl -Lo hapog.tar.gz {0}'.format(url).split(), stderr=subprocess.PIPE).communicate()
-        logger('Unpackaging Hapo-G package')
+	
+        logger('Unpackaging Hapo-G package')   
         subprocess.Popen('tar -xzf hapog.tar.gz'.split()).communicate()
+	# error is right after this Unpacking command 
+	#   shutil.copy('../bin/hapog','HAPO-G-1.2/build')
+	# No such file or directory: 'HAPO-G-1.2/build'
 
         os.unlink('hapog.tar.gz')
         gcc_ver = int(subprocess.Popen(['gcc', '-dumpversion'], stdout=subprocess.PIPE).communicate()[0].
@@ -293,7 +300,8 @@ def install_externals() :
             #  but fails with a segmentation fault when processing data
             #  Use precompiled which works with a locally compileed htslib
             os.makedirs('HAPO-G-{0}/build'.format(hapog_ver), exist_ok=True)
-            shutil.copy('../bin/hapog','HAPO-G-1.2/build')
+            #XX shutil.copy('../bin/hapog','HAPO-G-1.2/build')
+            shutil.copy('../bin/hapog','HAPO-G-{0}/build').format(hapog_ver)
             os.makedirs('HAPO-G-{0}/bin'.format(hapog_ver), exist_ok=True)
             subprocess.Popen('ln -fs ../build/hapog HAPO-G-{0}/bin/hapog'.format(hapog_ver).
                              split(), stderr=subprocess.PIPE).communicate()
