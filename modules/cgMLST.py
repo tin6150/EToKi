@@ -65,6 +65,7 @@ def get_allele_info(allele_npz) :
     return allele_npz
 
 def cgMLST(args) :
+    print('====== entering cgMLST fn ====== +Sn50+')
     pool = Pool(8)
     params = getParams(args)
     profile_file, allele_files, prefix = params['profile'], params['alleles'], params['output']
@@ -118,7 +119,9 @@ def cgMLST(args) :
     x = np.sum((data % 1000000 / 10).astype(int), 0).astype(float) / np.sum(data > 0, 0)
 
 
+    print('====== entering for ite(ration), cuts loop ====== +Sn50+')
     for ite, cuts in enumerate(iterations) :
+        os.system( 'date' )
         print('====== Iteration {0} ======'.format(ite))
         
         if 'genePresence' in cuts :
@@ -138,7 +141,12 @@ def cgMLST(args) :
         if 'oddsRatio' in cuts :
             print('Remove genes that are significantly variable (> {0} sigma) in a Gaussian process regression. This can take a long time.'.format(cuts['oddsRatio']))
             ## ++Sn50 this is the last message displayed before the Usage message.
+            ## error is the apply next line, see ...try02_error.rst :
+            ## ValueError: Cannot apply_along_axis when any iteration dimensions are 0
+            ## is the --profile file wrong, like didn't get the right entorobase db ?   ++Sn50++
             y = np.apply_along_axis(lambda d: np.unique(d[d > 0]).size, 0, data) * 100. / np.sum(data > 0, 0)
+            ## attempted hacking it with >=  , but same error, thus not using it >>>>
+            ##y = np.apply_along_axis(lambda d: np.unique(d[d >= 0]).size, 0, data) * 100. / np.sum(data > 0, 0)
             x0, y0 = x[p], y[p]
             #x1, y1 = x[colPresence == ite], y[colPresence == ite]
             
