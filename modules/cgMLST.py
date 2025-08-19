@@ -137,17 +137,20 @@ def cgMLST(args) :
 
         if 'oddsRatio' in cuts :
             print('Remove genes that are significantly variable (> {0} sigma) in a Gaussian process regression. This can take a long time.'.format(cuts['oddsRatio']))
+            ## ++Sn50 this is the last message displayed before the Usage message.
             y = np.apply_along_axis(lambda d: np.unique(d[d > 0]).size, 0, data) * 100. / np.sum(data > 0, 0)
             x0, y0 = x[p], y[p]
             #x1, y1 = x[colPresence == ite], y[colPresence == ite]
             
             kernel = 100.*RBF(length_scale=10.0, length_scale_bounds=(1e-3, 1e3)) + 1.0*WhiteKernel(1e-1, noise_level_bounds=(1e-5, 1e2))
+            print('+Sn50+ about to call GaussianProcessRegressor...')  
             gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
             gp.fit(x0[:, np.newaxis], y0)
             y_pred, sigma = gp.predict(x[:, np.newaxis], return_std=True)
             oddsRatio = (y - y_pred)/sigma
             if cuts['oddsRatio'] > 0 :
                 p &= (oddsRatio <= cuts['oddsRatio'])
+            print('+Sn50+ last line of if_oddsRatio block')  
 
         colPresence[ p ] = ite+1
         print('Remain {0} genes.'.format(np.sum(p)))

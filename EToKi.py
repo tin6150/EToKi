@@ -42,6 +42,7 @@ def etoki():
         exec('from modules.{0} import {0}'.format(arg.cmd))
         eval(arg.cmd)(sys.argv[2:])
     except ValueError as e :
+        print('+Sn50+ ValueError in parser at EToKi.py L44')
         parser.print_help()
 
 
